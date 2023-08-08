@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: resultserver
+  name: resultserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: resultserver
+  template:
+    metadata:
+      labels:
+        app: resultserver
+    spec:
+      containers:
+      - image: polatdocker/resultserver
+        name: resultserver
+        ports:
+        - containerPort: 80
+        envFrom:
+          - configMapRef:
+              name: server-config
+        env:
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: MYSQL_PASSWORD
+              name: mysql-secret
+          # value: Clarusway_1
+        # - name: MYSQL_DATABASE_HOST
+        #   value: mysql
+        # - name: MYSQL_DATABASE
+        #   value: phonebook
+        # - name: MYSQL_USER
+        #   value: clarus
+          
+        resources: {}
